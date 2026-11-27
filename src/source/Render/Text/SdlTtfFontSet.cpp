@@ -267,6 +267,12 @@ bool SdlTtfFontSet::OpenFallbacks(const BundledFont& fallbackFont, const char* c
         if (std::string_view(FallbackPath(fallbackFont, role)) == rolePaths[role])
             continue;
 
+#ifdef __EMSCRIPTEN__
+        // A packaged build may leave a script's fonts out: its text then has no glyphs.
+        if (Content::Probe(FallbackPath(fallbackFont, role)) == Content::Found::Nothing)
+            continue;
+#endif
+
         fallbacks[role] = OpenTtfFallbackRole(fallbackFont, role, m_primary[role]);
         if (!fallbacks[role] || !AttachTtfFallback(m_primary[role], fallbacks[role], RoleName(role)))
             return false;
