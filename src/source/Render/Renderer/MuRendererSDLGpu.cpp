@@ -2000,6 +2000,15 @@ public:
             return false;
         }
 
+        // Where the host paces the frames, a frame without a free texture is dropped. A browser signals a submission's
+        // fence only after the page yields, so with SDL's default of two in flight about a third were dropped.
+        constexpr Uint32 FramesInFlightWithoutWaiting = 3;
+        if (!Render::TargetFramesMayWait() && !SDL_SetGPUAllowedFramesInFlight(s_device, FramesInFlightWithoutWaiting))
+        {
+            mu::log::Get("render")->warn("SDL_gpu -- {} frames in flight refused: {}", FramesInFlightWithoutWaiting,
+                                         SDL_GetError());
+        }
+
         // Load real HLSL shader blobs from MU_SHADER_DIR, in the device's shader format.
         if (!LoadShaders())
         {
