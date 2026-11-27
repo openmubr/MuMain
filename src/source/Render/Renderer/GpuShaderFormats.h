@@ -23,6 +23,9 @@ inline constexpr std::array kShaderFormats{
     ShaderFormat{SDL_GPU_SHADERFORMAT_DXIL, SDL_PROP_GPU_DEVICE_CREATE_SHADERS_DXIL_BOOLEAN, "dxil", "main"},
     // spirv-cross renames "main" to "main0" in MSL because Metal reserves "main".
     ShaderFormat{SDL_GPU_SHADERFORMAT_MSL, SDL_PROP_GPU_DEVICE_CREATE_SHADERS_MSL_BOOLEAN, "msl", "main0"},
+#ifdef SDL_GPU_SHADERFORMAT_WGSL
+    ShaderFormat{SDL_GPU_SHADERFORMAT_WGSL, SDL_PROP_GPU_DEVICE_CREATE_SHADERS_WGSL_BOOLEAN, "wgsl", "main"},
+#endif
 };
 
 // The first shipped format among `accepted` (SDL_GetGPUShaderFormats), or nullptr when the device takes none.
